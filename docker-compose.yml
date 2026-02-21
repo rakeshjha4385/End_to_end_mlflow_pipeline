@@ -1,0 +1,7 @@
+version: "3.8"
+
+services:
+  catsdogs:
+    image: yourdockerhubusername/catsdogs:latest
+    ports:
+      - "8000:8000"

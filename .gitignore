@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+mlruns/
+model.pt
+.dvc/cache
+*.pyc
+.DS_Store
+*.zip
+data/raw/
+data/processed/
+data/split/
