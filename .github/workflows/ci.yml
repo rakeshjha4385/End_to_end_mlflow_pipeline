@@ -25,7 +25,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Unit Tests
-        run: pytest
+        run: PYTHONPATH=. pytest
 
       - name: Build Docker Image
         run: docker build -t catsdogs:ci .
