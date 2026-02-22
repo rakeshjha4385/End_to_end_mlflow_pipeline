@@ -2,14 +2,16 @@ from fastapi import FastAPI, UploadFile
 import torch
 from PIL import Image
 from torchvision import transforms
-from src.model.model import SimpleCNN
+from src.model.model import get_model
+# from src.model.model import SimpleCNN
 import logging
 
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 
-model = SimpleCNN()
+# model = SimpleCNN()
+model = get_model()
 model.load_state_dict(torch.load("model.pt", map_location="cpu"))
 model.eval()
 
@@ -28,9 +30,14 @@ async def predict(file: UploadFile):
 
     image = Image.open(file.file).convert("RGB")
     transform = transforms.Compose([
-        transforms.Resize((224,224)),
-        transforms.ToTensor()
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
+        )
     ])
+
 
     img_tensor = transform(image).unsqueeze(0)
 
