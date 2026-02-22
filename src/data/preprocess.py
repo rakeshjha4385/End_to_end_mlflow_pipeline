@@ -1,42 +1,32 @@
 import os
 from PIL import Image, UnidentifiedImageError
 
-INPUT_DIR = "data/raw/training_set/training_set"
-OUTPUT_DIR = "data/processed"
-
 VALID_EXTENSIONS = (".jpg", ".jpeg", ".png")
 
 
-def preprocess():
-
-    for label in ["cats", "dogs"]:
-
-        input_path = os.path.join(INPUT_DIR, label)
-        output_path = os.path.join(OUTPUT_DIR, label)
-
-        os.makedirs(output_path, exist_ok=True)
-
-        for file in os.listdir(input_path):
-
-            # Skip hidden files
-            if file.startswith("."):
-                continue
-
-            # Skip non-image files
-            if not file.lower().endswith(VALID_EXTENSIONS):
-                continue
-
-            try:
-                img_path = os.path.join(input_path, file)
-                img = Image.open(img_path).convert("RGB")
-                img = img.resize((224, 224))
-                img.save(os.path.join(output_path, file))
-
-            except UnidentifiedImageError:
-                print(f"Skipping corrupted image: {file}")
-
-    print("Preprocessing Completed Successfully")
+def preprocess_image(input_path: str, output_path: str):
+    """Resize a single image to 224x224 RGB."""
+    img = Image.open(input_path).convert("RGB")
+    img = img.resize((224, 224))
+    img.save(output_path)
 
 
-if __name__ == "__main__":
-    preprocess()
+def preprocess_folder(input_dir: str, output_dir: str):
+    """Preprocess all valid images inside a directory."""
+    os.makedirs(output_dir, exist_ok=True)
+
+    for file in os.listdir(input_dir):
+
+        if file.startswith("."):
+            continue
+
+        if not file.lower().endswith(VALID_EXTENSIONS):
+            continue
+
+        try:
+            input_path = os.path.join(input_dir, file)
+            output_path = os.path.join(output_dir, file)
+            preprocess_image(input_path, output_path)
+
+        except UnidentifiedImageError:
+            print(f"Skipping corrupted image: {file}")

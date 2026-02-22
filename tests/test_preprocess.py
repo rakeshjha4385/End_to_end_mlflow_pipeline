@@ -1,4 +1,5 @@
 from src.data.preprocess import preprocess_image
+from PIL import Image
 import os
 
 def test_preprocess(tmp_path):
